@@ -15,7 +15,7 @@ Login test web application is configured with the following.
 # Install dependencies
 npm install
 
-# Serve on localhost:8080
+# Serve on localhost:9000
 npm start
 
 # Build for production
