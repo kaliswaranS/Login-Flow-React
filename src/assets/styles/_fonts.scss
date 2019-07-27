@@ -1,0 +1,19 @@
+$path-to-fonts: "../fonts/";
+
+@font-face {
+  font-family: 'WorkSans-Medium';
+  font-weight: normal;
+  font-style: normal;
+  src:
+    url("#{$path-to-fonts}worksans-medium.woff2") format('woff2'),
+    url("#{$path-to-fonts}worksans-medium.woff") format('woff'),
+}
+
+@font-face {
+  font-family: 'WorkSans-Regular';
+  font-weight: normal;
+  font-style: normal;
+  src:
+    url("#{$path-to-fonts}worksans-regular.woff2") format('woff2'),
+    url("#{$path-to-fonts}worksans-regular.woff") format('woff'),
+}

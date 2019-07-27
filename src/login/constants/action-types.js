@@ -1,0 +1,9 @@
+const VALIDATE_USER = 'login/VALIDATE_USER';
+const LOGIN_SUCCESS = 'login/LOGIN_SUCCESS';
+const LOGOUT_USER = 'login/LOGOUT_USER';
+
+export {
+  VALIDATE_USER,
+  LOGIN_SUCCESS,
+  LOGOUT_USER,
+};

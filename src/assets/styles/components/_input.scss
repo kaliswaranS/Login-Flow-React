@@ -1,0 +1,18 @@
+@include b('input') {
+  border: 1px solid #D4D9E2;
+  border-radius: 3px;
+  padding: calcRem(16px);
+  font-size: calcRem(14px);
+  color: #596377;
+  outline: 0;
+  -webkit-transition: border-color .2s ease;
+  transition: border-color .2s ease;
+  height: calcRem(50px);
+  width: 100%;
+  font-family: $font-regular;
+  margin-bottom: calcRem(16px);
+
+  &:focus {
+    border-color: #8C96A9;
+  }
+}
