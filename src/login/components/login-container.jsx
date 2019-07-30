@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { connect } from 'react-redux';
@@ -9,87 +9,55 @@ import {
   loginSuccess as loginSuccessAction,
 } from '../actions/actions';
 
+import LoginForm from './login-form';
+
 import components from '../../components';
 
-const { TextBox, Button, Alert } = components;
+const { Alert } = components;
 
-export class LoginContainer extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: '',
-      password: '',
-    };
+const validateUserDetails = (e, users, validateUser, loginSuccess, username, password) => {
+  e.preventDefault();
+  const currentUser = _.filter(users, ['username', username])[0];
+  const loginStatus = currentUser ? currentUser.password === password : false;
+  validateUser(loginStatus);
+  if (loginStatus) {
+    loginSuccess(currentUser);
+    // Storing it in session, its useful when refreshing the page
+    sessionStorage.setItem('user', JSON.stringify({ username: currentUser.username, usertype: currentUser.usertype }))
   }
+  return false;
+}
 
-  validateUserDetails = (e) => {
-    e.preventDefault();
-    const currentUser = _.filter(this.props.users, ['username', this.state.username])[0];
-    const loginStatus = currentUser ? currentUser.password === this.state.password : false;
-    this.props.validateUser(loginStatus);
-    if (loginStatus) {
-      this.props.loginSuccess(currentUser);
-      // Storing it in session, its useful when refreshing the page
-      sessionStorage.setItem('user', JSON.stringify({ username: currentUser.username, usertype: currentUser.usertype }))
-    }
-    return false;
-  }
+const getAlertNode = () => <Alert message='Login Failed, Please verify login details' />;
 
-  getSubmitbutton = () => (
-    <div className="text-center">
-      <Button
-        text={"Login"}
-        onClick={this.validateUserDetails}
-      >
-      </Button>
-    </div>
-  )
+const LoginContainer = ({ isAuthenticated, users, validateUser, loginSuccess }) => {
 
-  updateTextboxValue = (e) => this.setState({ [e.target.name]: e.target.value });
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
 
-  getAlertNode = () => <Alert message='Login Failed, Please verify login details' />;
+  return (
+    <article className="login-content">
 
-  render() {
+      <form className="login-content__form" onSubmit={(e) => validateUserDetails(e, users, validateUser, loginSuccess, username, password)}>
+        <h3 className="login-content__title mb-2">
+          Sign in
+        </h3>
+        <p className="mb-5">Enter your details below</p>
 
-    const { isAuthenticated } = this.props;
+        <LoginForm
+          username={username}
+          password={password}
+          onUserNameChange={(value) => setUserName(value)}
+          onPasswordChange={(value) => setPassword(value)}
+          onSubmit={(e) => validateUserDetails(e, users, validateUser, loginSuccess, username, password)}
+        />
 
-    const { username } = this.state;
+        {isAuthenticated !== undefined && !isAuthenticated && getAlertNode()}
 
-    return (
-      <article className="login-content">
+      </form>
 
-        <form className="login-content__form" onSubmit={this.validateUserDetails}>
-          <h3 className="login-content__title mb-2">
-            Sign in
-            </h3>
-          <p className="mb-5">Enter your details below</p>
-
-          <TextBox
-            label="username"
-            onChange={e => this.updateTextboxValue(e)}
-            name="username"
-            value={username}
-          >
-          </TextBox>
-
-          <TextBox
-            label="password"
-            onChange={e => this.updateTextboxValue(e)}
-            type="password"
-            name="password"
-          >
-          </TextBox>
-
-          {this.getSubmitbutton()}
-
-          {isAuthenticated !== undefined && !isAuthenticated && this.getAlertNode()}
-
-        </form>
-
-      </article>
-    );
-  }
+    </article>
+  );
 }
 
 function mapStateToProps(state) {

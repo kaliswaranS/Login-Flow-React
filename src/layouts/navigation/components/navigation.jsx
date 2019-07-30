@@ -10,32 +10,27 @@ const navList = [
   { name: 'Settings', path: '/settings', usertype: ["admin"] },
 ];
 
-export class Navigation extends Component {
+const generateMenuItem = (menu, currentUser) => {
+  const { path, name, usertype } = menu;
+  // Menu item will be generated on conditional basis
+  if (currentUser && !_.includes(usertype, currentUser.usertype)) return;
 
-  generateMenuItem = (menu) => {
-    const { path, name, usertype } = menu;
-    // Menu item will be generated on conditional basis
-    if (this.props.currentUser && !_.includes(usertype, this.props.currentUser.usertype)) return;
-
-    return (
-      <li className="nav__item" key={name}>
-        <NavLink to={path} className="nav__text" role="nav-item" activeClassName="nav__text--active">
-          {name}
-        </NavLink>
-      </li>
-    );
-  }
-
-  render() {
-    return (
-      <aside className="app-container__aside">
-        <nav className="nav">
-          {_.map(navList, this.generateMenuItem)}
-        </nav>
-      </aside>
-    );
-  }
+  return (
+    <li className="nav__item" key={name}>
+      <NavLink to={path} className="nav__text" role="nav-item" activeClassName="nav__text--active">
+        {name}
+      </NavLink>
+    </li>
+  );
 }
+
+const Navigation = ({ currentUser }) => (
+  <aside className="app-container__aside">
+    <nav className="nav">
+      {_.map(navList, (nav) => generateMenuItem(nav, currentUser))}
+    </nav>
+  </aside>
+);
 
 function mapStateToProps(state) {
   return {

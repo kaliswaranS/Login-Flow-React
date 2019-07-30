@@ -12,45 +12,40 @@ import components from '../../../components';
 
 const { Button } = components;
 
-export class Header extends Component {
+const onLogoutUser = (logoutUser) => {
+  logoutUser();
+  sessionStorage.removeItem('user');
+};
 
-  logoutUser = () => {
-    this.props.logoutUser();
-    sessionStorage.removeItem('user');
-  };
+const getLogoutButton = (logoutUser) => (
+  <div className="header__logout-btn">
+    <Button
+      text={"Logout"}
+      onClick={() => onLogoutUser(logoutUser)}
+      className="btn--sm"
+    >
+    </Button>
+  </div>
+);
 
-  getLogoutButton = () => (
-    <div className="header__logout-btn">
-      <Button
-        text={"Logout"}
-        onClick={this.logoutUser}
-        className="btn--sm"
-      >
-      </Button>
-    </div>
-  );
+const getUserName = (username) => <div>Welcome, <span className="header__username">{username}</span></div>;
 
-  getUserName = (username) => <div>Welcome, <span className="header__username">{username}</span></div>;
+const getLogoNode = () => <a href="javascript:void(0);" className="logo" role="logo">Login Flow</a>;
 
-  getLogoNode = () => <a href="javascript:void(0);" className="logo" role="logo">Login Flow</a>;
-
-  render() {
-    const { currentUser } = this.props;
-    const { username } = currentUser;
-
-    return (
-      <header className="app-container__header header">
-        <div className="container header__container">
-          {this.getLogoNode()}
-          <div className="header__logout-section">
-            {this.getUserName(username)}
-            {this.getLogoutButton()}
-          </div>
+const Header = ({ currentUser, logoutUser }) => {
+  const { username } = currentUser;
+  return (
+    <header className="app-container__header header">
+      <div className="container header__container">
+        {getLogoNode()}
+        <div className="header__logout-section">
+          {getUserName(username)}
+          {getLogoutButton(logoutUser)}
         </div>
-      </header>
-    );
-  }
-}
+      </div>
+    </header>
+  );
+};
 
 function mapStateToProps(state) {
   return {
